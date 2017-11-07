@@ -15,7 +15,7 @@ namespace YrSlackAzFuncApp
         private const string YrTextualForecastUrl = "http://www.yr.no/api/v0/locations/1-72837/forecast/autotext";
 
         private const string Every10Seconds = "*/10 * * * * *";     // For testing
-        private const string EveryMorningAt6 = "0 0 5,12 * * *";    // For prod use
+        private const string EveryMorningAt6 = "0 0 7,15 * * *";    // For prod use (set key WEBSITE_TIME_ZONE in app settings to "Central Europe Standard Time" to use Norwegian time zone)
 
         private static readonly HttpClient HttpClient = new HttpClient();
 
