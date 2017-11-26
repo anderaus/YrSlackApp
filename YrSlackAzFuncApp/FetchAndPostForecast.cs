@@ -1,7 +1,6 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using System;
-using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -12,7 +11,7 @@ namespace YrSlackAzFuncApp
 {
     public static class FetchAndPostForecast
     {
-        private static readonly string SlackWebhookUrl = ConfigurationManager.AppSettings["SlackWebhookUrl"];
+        private static readonly string SlackWebhookUrl = Environment.GetEnvironmentVariable("SlackWebhookUrl");
         private static readonly HttpClient HttpClient = new HttpClient();
 
         private const string Every10Seconds = "*/10 * * * * *";     // For testing
