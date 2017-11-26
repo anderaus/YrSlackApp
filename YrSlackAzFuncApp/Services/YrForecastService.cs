@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using YrSlackAzFuncApp.Models;
 
-namespace YrSlackAzFuncApp
+namespace YrSlackAzFuncApp.Services
 {
     public class YrForecastService : IForecastService
     {
