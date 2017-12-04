@@ -7,7 +7,7 @@ namespace YrSlackAzFuncApp.Services
 {
     public class ForecastParser
     {
-        private readonly CultureInfo nbNO = new CultureInfo("nb-NO");
+        private readonly CultureInfo _nbNo = new CultureInfo("nb-NO");
 
         public string CreateSlackMessage(string textualForecast, YrForecast forecast)
         {
@@ -20,7 +20,9 @@ namespace YrSlackAzFuncApp.Services
             var highestTemp = intervals.OrderByDescending(i => i.Temperature.Value).First();
             var lowestTemp = intervals.OrderBy(i => i.Temperature.Value).First();
             slackMessage.AppendLine(
-                $":thermometer: Temperaturen svinger mellom {lowestTemp.Temperature.Value.ToString(nbNO)}° kl. {lowestTemp.Start.Hour:00} og {highestTemp.Temperature.Value.ToString(nbNO)}° kl. {highestTemp.Start.Hour:00}.");
+                lowestTemp.Start < highestTemp.Start
+                    ? $":thermometer: Temperaturen svinger mellom {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00} og {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00}."
+                    : $":thermometer: Temperaturen svinger mellom {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00} og {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00}.");
 
             var mostRain = intervals.OrderByDescending(i => i.Precipitation.Value).First();
             if (!mostRain.Precipitation.Value.HasValue || mostRain.Precipitation.Value < 0.01f)
@@ -29,7 +31,7 @@ namespace YrSlackAzFuncApp.Services
             }
             else
             {
-                slackMessage.AppendLine($":rain_cloud: Mest regn mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value).Value.ToString(nbNO)} mm.");
+                slackMessage.AppendLine($":rain_cloud: Mest regn mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.");
             }
 
             var mostWind = intervals.OrderByDescending(i => i.Wind.Speed).First();
@@ -39,7 +41,7 @@ namespace YrSlackAzFuncApp.Services
             }
             else
             {
-                slackMessage.Append($":wind_blowing_face: Mest vind mellom kl {mostWind.Start.Hour:00} og {mostWind.End.Hour:00}, med {mostWind.Wind.Speed.ToString(nbNO)} m/s.");
+                slackMessage.Append($":wind_blowing_face: Mest vind mellom kl {mostWind.Start.Hour:00} og {mostWind.End.Hour:00}, med {mostWind.Wind.Speed.ToString(_nbNo)} m/s.");
             }
 
             //slackMessage.AppendLine("```");
