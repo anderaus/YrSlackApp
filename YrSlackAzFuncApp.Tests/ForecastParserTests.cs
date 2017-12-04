@@ -35,7 +35,7 @@ Start: 11/26/2017 10:00:00 PM    End: 11/26/2017 11:00:00 PM    Temperature: 1.2
 
             Assert.Equal(@"Det blir delvis skyet på morgenen og i kveld, regn i ettermiddag.
 :thermometer: Temperaturen svinger mellom 2,7° kl. 10 og 0,7° kl. 21.
-:rain_cloud: Mest regn mellom kl 13 og 14, med 0,9 mm. Totalt 2,8 mm.
+:rain_cloud: Mest nedbør mellom kl 13 og 14, med 0,9 mm. Totalt 2,8 mm.
 :wind_blowing_face: Mest vind mellom kl 07 og 08, med 5 m/s.",
                     result);
         }
@@ -58,7 +58,7 @@ Start: 11/25/2017 10:00:00 PM    End: 11/25/2017 11:00:00 PM    Temperature: -0.
 
             Assert.Equal(@"Det blir delvis skyet resten av dagen.
 :thermometer: Temperaturen svinger mellom 2,2° kl. 15 og -0,2° kl. 22.
-:rain_cloud: Det er ikke meldt noe regn! :smiley:
+:rain_cloud: Det er ikke meldt noe nedbør! :smiley:
 :wind_blowing_face: Mest vind mellom kl 17 og 18, med 3,2 m/s.",
                     result);
         }
@@ -89,7 +89,7 @@ Start: 11/18/2017 10:00:00 PM    End: 11/18/2017 11:00:00 PM    Temperature: 0.2
 
             Assert.Equal(@"Det blir lettskyet i dag og delvis skyet i kveld.
 :thermometer: Temperaturen svinger mellom 3,6° kl. 14 og 0° kl. 20.
-:rain_cloud: Det er ikke meldt noe regn! :smiley:
+:rain_cloud: Det er ikke meldt noe nedbør! :smiley:
 :wind_blowing_face: Mest vind mellom kl 22 og 23, med 4 m/s.",
                 result);
         }

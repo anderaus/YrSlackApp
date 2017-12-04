@@ -27,11 +27,11 @@ namespace YrSlackAzFuncApp.Services
             var mostRain = intervals.OrderByDescending(i => i.Precipitation.Value).First();
             if (!mostRain.Precipitation.Value.HasValue || mostRain.Precipitation.Value < 0.01f)
             {
-                slackMessage.AppendLine(":rain_cloud: Det er ikke meldt noe regn! :smiley:");
+                slackMessage.AppendLine(":rain_cloud: Det er ikke meldt noe nedbør! :smiley:");
             }
             else
             {
-                slackMessage.AppendLine($":rain_cloud: Mest regn mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.");
+                slackMessage.AppendLine($":rain_cloud: Mest nedbør mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.");
             }
 
             var mostWind = intervals.OrderByDescending(i => i.Wind.Speed).First();
