@@ -11,21 +11,19 @@ namespace YrSlackAzFuncApp
     public static class FetchAndPostForecast
     {
         private static readonly string SlackWebhookUrl = Environment.GetEnvironmentVariable("SlackWebhookUrl");
+        private static readonly string YrLocationId = Environment.GetEnvironmentVariable("YR_LOCATION_ID");
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        private const string Every10Seconds = "*/10 * * * * *";             // For testing
-        private const string EveryMorningAndAfternoon = "0 0 7,15 * * *";   // For prod use (set key WEBSITE_TIME_ZONE in app settings to "Central Europe Standard Time" to use Norwegian time zone)
-
         [FunctionName("FetchAndPostForecast")]
-        public static async Task Run([TimerTrigger(EveryMorningAndAfternoon)]TimerInfo myTimer, TraceWriter log)
+        public static async Task Run([TimerTrigger("%CRON_EXPRESSION%")]TimerInfo myTimer, TraceWriter log)
         {
             log.Info($"FetchAndPostForecast function executed at: {DateTime.UtcNow}");
 
             var forecastService = new YrForecastService();
-            var textualForecast = await forecastService.GetTextualForecast();
+            var textualForecast = await forecastService.GetTextualForecast(YrLocationId);
             log.Info($"FetchAndPostForecast got forecast: {textualForecast}");
 
-            var fullForecast = await forecastService.GetFullForecast();
+            var fullForecast = await forecastService.GetFullForecast(YrLocationId);
 
             var slackMessage = new ForecastParser().CreateSlackMessage(textualForecast, fullForecast);
             log.Info($"Sending Slack message:\n{slackMessage}");
