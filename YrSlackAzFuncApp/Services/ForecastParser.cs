@@ -39,8 +39,10 @@ namespace YrSlackAzFuncApp.Services
             var lowestTemp = intervals.OrderBy(i => i.Temperature.Value).First();
             return
                 lowestTemp.Start < highestTemp.Start
-                    ? $":thermometer: Temperaturen svinger mellom {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00} og {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00}."
-                    : $":thermometer: Temperaturen svinger mellom {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00} og {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00}.";
+                    ? $":thermometer: Temperaturen svinger mellom {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00} " +
+                      $"og {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00}."
+                    : $":thermometer: Temperaturen svinger mellom {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00} " +
+                      $"og {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00}.";
 
         }
 
