@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using YrSlackAzFuncApp.Finders;
 using YrSlackAzFuncApp.Models;
 
 namespace YrSlackAzFuncApp.Services
@@ -56,10 +57,12 @@ namespace YrSlackAzFuncApp.Services
 
         private string BuildPrecipitationText(IReadOnlyCollection<WeatherInterval> intervals)
         {
+            var emoji = new PrecipitationEmojiFinder().FindPrecipitationEmoji(intervals);
+
             var mostRain = intervals.OrderByDescending(i => i.Precipitation.Value).First();
             return !mostRain.Precipitation.Value.HasValue || mostRain.Precipitation.Value < 0.01f
-                ? ":cloud: Det er ikke meldt noe nedbør! :smiley:"
-                : $":rain_cloud: Mest nedbør mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, " +
+                ? $"{emoji} Det er ikke meldt noe nedbør! :smiley:"
+                : $"{emoji} Mest nedbør mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, " +
                   $"med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.";
         }
     }
