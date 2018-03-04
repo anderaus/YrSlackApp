@@ -56,7 +56,7 @@ namespace YrSlackAzFuncApp.Services
         {
             var mostRain = intervals.OrderByDescending(i => i.Precipitation.Value).First();
             return !mostRain.Precipitation.Value.HasValue || mostRain.Precipitation.Value < 0.01f
-                ? ":rain_cloud: Det er ikke meldt noe nedbør! :smiley:"
+                ? ":cloud: Det er ikke meldt noe nedbør! :smiley:"
                 : $":rain_cloud: Mest nedbør mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, " +
                   $"med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.";
         }

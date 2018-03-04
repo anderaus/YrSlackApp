@@ -7,7 +7,7 @@ using YrSlackAzFuncApp.Services;
 
 namespace YrSlackAzFuncApp.Tests
 {
-    public class ForecastParserTests
+    public class ForecastParserFromResultTests
     {
         [Fact]
         public void CreateSlackMessage_WhenIsCloudyAndRainy_ShouldReturnProperText()
@@ -58,13 +58,13 @@ Start: 11/25/2017 10:00:00 PM    End: 11/25/2017 11:00:00 PM    Temperature: -0.
 
             Assert.Equal(@"Det blir delvis skyet resten av dagen.
 :thermometer: Temperaturen svinger mellom 2,2° kl. 15 og -0,2° kl. 22.
-:rain_cloud: Det er ikke meldt noe nedbør! :smiley:
+:cloud: Det er ikke meldt noe nedbør! :smiley:
 :wind_blowing_face: Mest vind mellom kl 17 og 18, med 3,2 m/s.",
                     result);
         }
 
         [Fact]
-        public void CreateSlackMessage_WhenLowestTemperatureIsLaterThanHights_ShouldReturnChronological()
+        public void CreateSlackMessage_WhenLowestTemperatureIsLaterThanHighest_ShouldReturnChronological()
         {
             const string textualForecast = "Det blir lettskyet i dag og delvis skyet i kveld.";
             var forecast = ParseIntervals(
@@ -89,7 +89,7 @@ Start: 11/18/2017 10:00:00 PM    End: 11/18/2017 11:00:00 PM    Temperature: 0.2
 
             Assert.Equal(@"Det blir lettskyet i dag og delvis skyet i kveld.
 :thermometer: Temperaturen svinger mellom 3,6° kl. 14 og 0° kl. 20.
-:rain_cloud: Det er ikke meldt noe nedbør! :smiley:
+:cloud: Det er ikke meldt noe nedbør! :smiley:
 :wind_blowing_face: Mest vind mellom kl 22 og 23, med 4 m/s.",
                 result);
         }
