@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using YrSlackAzFuncApp.Models;
@@ -17,32 +18,9 @@ namespace YrSlackAzFuncApp.Services
 
             var intervals = forecast.ShortIntervals.TakeWhile(i => i.End.Hour != 0).ToList();
 
-            var highestTemp = intervals.OrderByDescending(i => i.Temperature.Value).First();
-            var lowestTemp = intervals.OrderBy(i => i.Temperature.Value).First();
-            slackMessage.AppendLine(
-                lowestTemp.Start < highestTemp.Start
-                    ? $":thermometer: Temperaturen svinger mellom {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00} og {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00}."
-                    : $":thermometer: Temperaturen svinger mellom {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00} og {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00}.");
-
-            var mostRain = intervals.OrderByDescending(i => i.Precipitation.Value).First();
-            if (!mostRain.Precipitation.Value.HasValue || mostRain.Precipitation.Value < 0.01f)
-            {
-                slackMessage.AppendLine(":rain_cloud: Det er ikke meldt noe nedbør! :smiley:");
-            }
-            else
-            {
-                slackMessage.AppendLine($":rain_cloud: Mest nedbør mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.");
-            }
-
-            var mostWind = intervals.OrderByDescending(i => i.Wind.Speed).First();
-            if (mostWind.Wind.Speed < 0.01f)
-            {
-                slackMessage.AppendLine(":wind_blowing_face: Det er ikke meldt noe vind!");
-            }
-            else
-            {
-                slackMessage.Append($":wind_blowing_face: Mest vind mellom kl {mostWind.Start.Hour:00} og {mostWind.End.Hour:00}, med {mostWind.Wind.Speed.ToString(_nbNo)} m/s.");
-            }
+            slackMessage.AppendLine(BuildTemperatureText(intervals));
+            slackMessage.AppendLine(BuildPrecipitationText(intervals));
+            slackMessage.AppendLine(BuildWindText(intervals));
 
             //slackMessage.AppendLine("```");
             //slackMessage.AppendLine("debug info:");
@@ -52,7 +30,35 @@ namespace YrSlackAzFuncApp.Services
             //}
             //slackMessage.AppendLine("```");
 
-            return slackMessage.ToString();
+            return slackMessage.ToString().Trim();
+        }
+
+        private string BuildTemperatureText(IReadOnlyCollection<WeatherInterval> intervals)
+        {
+            var highestTemp = intervals.OrderByDescending(i => i.Temperature.Value).First();
+            var lowestTemp = intervals.OrderBy(i => i.Temperature.Value).First();
+            return
+                lowestTemp.Start < highestTemp.Start
+                    ? $":thermometer: Temperaturen svinger mellom {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00} og {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00}."
+                    : $":thermometer: Temperaturen svinger mellom {highestTemp.Temperature.Value.ToString(_nbNo)}° kl. {highestTemp.Start.Hour:00} og {lowestTemp.Temperature.Value.ToString(_nbNo)}° kl. {lowestTemp.Start.Hour:00}.";
+
+        }
+
+        private string BuildWindText(IReadOnlyCollection<WeatherInterval> intervals)
+        {
+            var mostWind = intervals.OrderByDescending(i => i.Wind.Speed).First();
+            return mostWind.Wind.Speed < 0.01f
+                ? ":wind_blowing_face: Det er ikke meldt noe vind!"
+                : $":wind_blowing_face: Mest vind mellom kl {mostWind.Start.Hour:00} og {mostWind.End.Hour:00}, med {mostWind.Wind.Speed.ToString(_nbNo)} m/s.";
+        }
+
+        private string BuildPrecipitationText(IReadOnlyCollection<WeatherInterval> intervals)
+        {
+            var mostRain = intervals.OrderByDescending(i => i.Precipitation.Value).First();
+            return !mostRain.Precipitation.Value.HasValue || mostRain.Precipitation.Value < 0.01f
+                ? ":rain_cloud: Det er ikke meldt noe nedbør! :smiley:"
+                : $":rain_cloud: Mest nedbør mellom kl {mostRain.Start.Hour:00} og {mostRain.End.Hour:00}, " +
+                  $"med {mostRain.Precipitation.Value} mm. Totalt {intervals.Sum(i => i.Precipitation.Value)?.ToString(_nbNo)} mm.";
         }
     }
 }
