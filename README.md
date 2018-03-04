@@ -1,6 +1,7 @@
 # YrSlackApp
 Simple weather forecast slack notifier using the YR api and Azure Functions
 
+![Slack example](https://raw.githubusercontent.com/anderaus/YrSlackApp/master/assets/bot_sample.png)
 
 Requires an existing azure func app in Azure set up with these application keys:
 
